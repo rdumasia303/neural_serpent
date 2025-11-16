@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>NEURAL SERPENT // SYSTEM BREACH</title>
+  <link rel="stylesheet" href="static/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- CRT overlay effects -->
+  <div class="crt-overlay"></div>
+  <div class="scanlines"></div>
+  <div class="vignette"></div>
+  <div class="static-noise"></div>
+  
+  <!-- Warning flash -->
+  <div class="danger-flash"></div>
+  
+  <!-- Background corruption -->
+  <canvas id="bgCorruption"></canvas>
+  
+  <div class="terminal-container">
+    <!-- System header -->
+    <div class="system-header">
+      <div class="header-line">
+        <span class="glitch-text" data-text="NEURAL_SERPENT_v2.77">NEURAL_SERPENT_v2.77</span>
+        <span class="sys-status">
+          <span class="status-dot"></span>
+          <span id="sysStatus">STANDBY</span>
+        </span>
+      </div>
+      <div class="warning-bar">
+        <span class="warn-icon">⚠</span>
+        <span class="warn-text" id="warnText">BIOMETRIC AUTHENTICATION REQUIRED // LETHAL COUNTERMEASURES ACTIVE</span>
+      </div>
+    </div>
+
+    <div class="main-grid">
+      <!-- Game viewport -->
+      <section class="game-zone">
+        <div class="zone-header">
+          <span class="zone-label">CONTAINMENT_CHAMBER</span>
+          <span class="zone-id">[ID: 0x4E45]</span>
+        </div>
+        
+        <div class="canvas-container">
+          <!-- Main game canvas -->
+          <canvas id="game" width="600" height="600"></canvas>
+          <!-- Effects layer -->
+          <canvas id="effects" width="600" height="600"></canvas>
+          <!-- Scanline overlay -->
+          <canvas id="scan" width="600" height="600"></canvas>
+          
+          <!-- Holographic HUD overlays -->
+          <div class="hud-overlay">
+            <div class="hud-corner top-left"></div>
+            <div class="hud-corner top-right"></div>
+            <div class="hud-corner bottom-left"></div>
+            <div class="hud-corner bottom-right"></div>
+            <div class="hud-crosshair"></div>
+          </div>
+          
+          <!-- Danger zones (animated) -->
+          <div class="danger-zones"></div>
+        </div>
+        
+        <!-- Control panel -->
+        <div class="control-panel">
+          <div class="stat-group">
+            <div class="stat-box">
+              <div class="stat-label">NEURAL_MASS</div>
+              <div class="stat-value" id="score">0</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">MAX_PAYLOAD</div>
+              <div class="stat-value" id="best">0</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">SEGMENTS</div>
+              <div class="stat-value" id="segments">1</div>
+            </div>
+          </div>
+          
+          <div class="btn-group">
+            <button id="start" class="cyber-btn primary">
+              <span class="btn-icon">▶</span>
+              <span class="btn-text">INITIATE</span>
+              <span class="btn-glow"></span>
+            </button>
+            <button id="pause" class="cyber-btn secondary">
+              <span class="btn-icon">⏚</span>
+              <span class="btn-text">SUSPEND</span>
+              <span class="btn-glow"></span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Side panel -->
+      <aside class="data-panel">
+        <!-- Leaderboard -->
+        <div class="panel-section">
+          <div class="section-header">
+            <span class="section-icon">◆</span>
+            <span class="section-title">ARCHIVE_LOG</span>
+          </div>
+          <div class="leaderboard" id="leaderboardContainer">
+            <div class="loading-text">DECRYPTING...</div>
+          </div>
+        </div>
+
+        <!-- System info -->
+        <div class="panel-section">
+          <div class="section-header">
+            <span class="section-icon">◇</span>
+            <span class="section-title">PROTOCOL</span>
+          </div>
+          <div class="info-block">
+            <div class="info-line">
+              <span class="info-key">ARROWS</span>
+              <span class="info-sep">:</span>
+              <span class="info-val">NAVIGATE</span>
+            </div>
+            <div class="info-line">
+              <span class="info-key">SPACE</span>
+              <span class="info-sep">:</span>
+              <span class="info-val">CONTROL</span>
+            </div>
+            <div class="info-line">
+              <span class="info-key">OBJECTIVE</span>
+              <span class="info-sep">:</span>
+              <span class="info-val">CONSUME_ALL</span>
+            </div>
+            <div class="info-line danger">
+              <span class="info-key">WARNING</span>
+              <span class="info-sep">:</span>
+              <span class="info-val">SELF-COLLISION=FATAL</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Diagnostics -->
+        <div class="panel-section">
+          <div class="section-header">
+            <span class="section-icon">◈</span>
+            <span class="section-title">DIAGNOSTICS</span>
+          </div>
+          <div class="diagnostic-readout">
+            <div class="diag-line">
+              <span class="diag-label">NEURAL_SYNC:</span>
+              <span class="diag-bar">
+                <span class="diag-fill" id="syncBar"></span>
+              </span>
+              <span class="diag-val" id="syncVal">100%</span>
+            </div>
+            <div class="diag-line">
+              <span class="diag-label">CORRUPTION:</span>
+              <span class="diag-bar">
+                <span class="diag-fill corrupt" id="corruptBar"></span>
+              </span>
+              <span class="diag-val" id="corruptVal">0%</span>
+            </div>
+            <div class="diag-line">
+              <span class="diag-label">THREAT_LVL:</span>
+              <span class="diag-bar">
+                <span class="diag-fill threat" id="threatBar"></span>
+              </span>
+              <span class="diag-val" id="threatVal">MINIMAL</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- Footer -->
+    <div class="terminal-footer">
+      <div class="footer-line">
+        <span class="footer-label">SYS://</span>
+        <span class="footer-text">NEUROCORE_INDUSTRIES © 2077 // UNAUTHORIZED ACCESS MONITORED</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Game Over Modal -->
+  <div id="gameOverModal" class="modal-overlay hidden">
+    <div class="modal-container">
+      <div class="modal-glitch"></div>
+      <div class="modal-header">
+        <div class="modal-title glitch-text" data-text="SYSTEM_FAILURE">SYSTEM_FAILURE</div>
+        <div class="modal-code">ERROR_CODE: 0xDEAD</div>
+      </div>
+      
+      <div class="modal-body">
+        <div class="modal-stat">
+          <span class="modal-stat-label">FINAL_PAYLOAD:</span>
+          <span class="modal-stat-value" id="finalScore">0</span>
+        </div>
+        
+        <div class="input-group">
+          <label class="input-label">OPERATOR_ID:</label>
+          <input 
+            id="nameInput" 
+            class="cyber-input" 
+            maxlength="20" 
+            placeholder="ENTER DESIGNATION..."
+            autocomplete="off"
+          />
+        </div>
+        
+        <div class="modal-actions">
+          <button id="nameSubmit" class="cyber-btn primary">
+            <span class="btn-text">UPLOAD_LOG</span>
+            <span class="btn-glow"></span>
+          </button>
+          <button id="nameCancel" class="cyber-btn secondary">
+            <span class="btn-text">PURGE_DATA</span>
+            <span class="btn-glow"></span>
+          </button>
+        </div>
+      </div>
+      
+      <div class="modal-static"></div>
+    </div>
+  </div>
+
+  <script src="static/js/game.js"></script>
+</body>
+</html>

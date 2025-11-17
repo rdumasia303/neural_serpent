@@ -1,5 +1,7 @@
 # NEURAL SERPENT // SYSTEM BREACH
 
+https://rdumasia303.github.io/everyone_needs_a_snake/
+
 > Because literally everyone has a snake game now, so this one had to overcompensate and become a hostile AI experiment.
 
 ![Behold the beauty](docs/splash.png)

@@ -44,16 +44,7 @@ The interface screams things like `CONTAINMENT_CHAMBER`, `NEURAL_MASS`, and `ARC
 
 ## Running the game
 
-Everything is front‑end only:
-
-1. Serve the folder with a static file server (or use the go‑to Python one):  
-   ```bash
-   python -m http.server 8000
-   ```  
-2. Open `http://localhost:8000` in your browser.  
-3. Hit **INITIATE** and accept your fate.
-
-Alternatively, many editors have a “Live Server” extension; pointing that at `index.html` works just as well.
+Everything is front‑end only, so just load up index.html
 
 ---
 
